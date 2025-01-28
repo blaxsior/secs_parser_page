@@ -21,13 +21,9 @@ type Secs2ItemMap<T extends Secs2ItemSML> =
 /**
  * SECS-II의 각 아이템 타입
  */
-export type Secs2ItemType<T extends Secs2ItemSML> = {
+export type Secs2ItemType<T extends Secs2ItemSML = Secs2ItemSML> = {
     sml: T,
     formatCode: number
-};
-
-export type Secs2ItemInfo = {
-    [K in Secs2ItemSML]: Secs2ItemType<K>
 };
 
 export type Secs2Item = {
