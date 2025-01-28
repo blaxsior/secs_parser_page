@@ -1,6 +1,6 @@
-import { Secs2ItemType } from "./secs";
+import { Secs2ItemInfo } from "./secs";
 
-const secsItemInfoList: Secs2ItemType[] = [
+const secsItemInfoList: Secs2ItemInfo[] = [
     { sml: 'L', formatCode: 0o00 },
     { sml: 'B', formatCode: 0o10 },
     { sml: 'BOOLEAN', formatCode: 0o11 },
@@ -17,12 +17,12 @@ const secsItemInfoList: Secs2ItemType[] = [
     { sml: 'U4', formatCode: 0o54 },
 ] as const; // 나중에 필요하면 다른 폴더로 이동
 
-class SecsItemInfoMap {
-    private smlToInfo: Map<string, Secs2ItemType>;
-    private formatCodeToInfo: Map<number, Secs2ItemType>;
-    private itemList: Secs2ItemType[];
+class Secs2ItemInfoMap {
+    private smlToInfo: Map<string, Secs2ItemInfo>;
+    private formatCodeToInfo: Map<number, Secs2ItemInfo>;
+    private itemList: Secs2ItemInfo[];
 
-    constructor(itemList: Secs2ItemType[]) {
+    constructor(itemList: Secs2ItemInfo[]) {
         this.smlToInfo = new Map();
         this.formatCodeToInfo = new Map();
         this.itemList = structuredClone(itemList);
@@ -47,9 +47,9 @@ class SecsItemInfoMap {
     }
 }
 
-const secsInfoMap = new SecsItemInfoMap(secsItemInfoList);
+const secsInfoMap = new Secs2ItemInfoMap(secsItemInfoList);
 
 export {
-    SecsItemInfoMap,
+    Secs2ItemInfoMap,
     secsInfoMap
 };

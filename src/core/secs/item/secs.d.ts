@@ -7,7 +7,7 @@ export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' |
     'F8' | 'F4' |
     'U8' | 'U1' | 'U2' | 'U4';
 
-type Secs2ItemMap<T extends Secs2ItemSML> =
+type Secs2ItemDataType<T extends Secs2ItemSML> =
     T extends 'L' ? Secs2Item[] :
     T extends 'B' ? Uint8Array :
     T extends 'BOOLEAN' ? boolean[] :
@@ -21,16 +21,16 @@ type Secs2ItemMap<T extends Secs2ItemSML> =
 /**
  * SECS-II의 각 아이템 타입
  */
-export type Secs2ItemType<T extends Secs2ItemSML = Secs2ItemSML> = {
+export type Secs2ItemInfo<T extends Secs2ItemSML = Secs2ItemSML> = {
     sml: T,
     formatCode: number
 };
 
 export type Secs2Item = {
     [K in Secs2ItemSML]: {
-        type: Secs2ItemInfo[K];
+        info: Secs2ItemInfo<K>;
         name?: string;
         length: number;
-        item: Secs2ItemMap<K>;
+        data: Secs2ItemDataType<K>;
     };
 }[Secs2ItemSML];
