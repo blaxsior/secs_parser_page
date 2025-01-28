@@ -14,9 +14,10 @@ type Secs2ItemDataType<T extends Secs2ItemSML> =
     T extends 'A' ? string :
     T extends
     // 'J' | 
-    'I8' | 'I1' | 'I2' | 'I4' |
+    'I1' | 'I2' | 'I4' |
     'F8' | 'F4' |
-    'U8' | 'U1' | 'U2' | 'U4' ? number[] :
+    'U1' | 'U2' | 'U4' ? number[] :
+    T extends 'I8' | 'U8' ? bigint[] :
     never;
 /**
  * SECS-II의 각 아이템 타입
