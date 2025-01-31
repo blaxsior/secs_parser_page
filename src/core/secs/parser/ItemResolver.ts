@@ -57,7 +57,7 @@ export class ItemConvertResolver {
 
     private handleI8(reader: BufferReader, length: number) {
         const data: bigint[] = [];
-        for (let i = 0; i < ~~(length / 8); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readInt64());
         }
         return data;
@@ -73,7 +73,7 @@ export class ItemConvertResolver {
 
     private handleI2(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 2); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readInt16());
         }
         return data;
@@ -81,7 +81,7 @@ export class ItemConvertResolver {
 
     private handleI4(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 4); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readInt32());
         }
         return data;
@@ -89,7 +89,7 @@ export class ItemConvertResolver {
 
     private handleU8(reader: BufferReader, length: number) {
         const data: bigint[] = [];
-        for (let i = 0; i < ~~(length / 8); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readUInt64());
         }
         return data;
@@ -105,7 +105,7 @@ export class ItemConvertResolver {
 
     private handleU2(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 2); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readUInt16());
         }
         return data;
@@ -113,7 +113,7 @@ export class ItemConvertResolver {
 
     private handleU4(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 4); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readUInt32());
         }
         return data;
@@ -121,7 +121,7 @@ export class ItemConvertResolver {
 
     private handleF4(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 4); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readFloat32());
         }
         return data;
@@ -129,7 +129,7 @@ export class ItemConvertResolver {
 
     private handleF8(reader: BufferReader, length: number) {
         const data: number[] = [];
-        for (let i = 0; i < ~~(length / 8); i++) {
+        for (let i = 0; i < length; i++) {
             data.push(reader.readFloat64());
         }
         return data;

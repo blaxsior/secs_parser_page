@@ -115,15 +115,12 @@ describe('SecsParser Test', () => {
                     {
                         info: secsInfoMap.fromSML('B'),
                         data: [4],
-                        length: 1
                     },
                     {
                         info: secsInfoMap.fromSML('A'),
                         data: 'T1 HIGH',
-                        length: 7
                     }
                 ],
-                length: 2
             };
 
             const result = parser.parse(reader);
@@ -143,7 +140,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('B'),
                 data: [0b10101010],
-                length: 1
             };
 
             const result = parser.parse(reader);
@@ -164,7 +160,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('BOOLEAN'),
                 data: [true, false],
-                length: 2
             };
 
             const result = parser.parse(reader);
@@ -187,7 +182,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('A'),
                 data: 'ABC',
-                length: 3
             };
 
             const result = parser.parse(reader);
@@ -211,7 +205,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('I8'),
                 data: [-1n],
-                length: 8
             };
 
             const result = parser.parse(reader);
@@ -233,7 +226,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('I1'),
                 data: [-1],
-                length: 1
             };
 
             const result = parser.parse(reader);
@@ -256,7 +248,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('I2'),
                 data: [10, 20, 30],
-                length: 6
             };
 
             const result = parser.parse(reader);
@@ -278,7 +269,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('I4'),
                 data: [-1],
-                length: 4
             };
 
             const result = parser.parse(reader);
@@ -302,7 +292,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('U8'),
                 data: [ui64max],
-                length: 8
             };
 
             const result = parser.parse(reader);
@@ -324,7 +313,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('U1'),
                 data: [255],
-                length: 1
             };
 
             const result = parser.parse(reader);
@@ -346,7 +334,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('U2'),
                 data: [0xFFFF],
-                length: 2
             };
 
             const result = parser.parse(reader);
@@ -368,7 +355,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('U4'),
                 data: [0xFFFF_FFFF],
-                length: 4
             };
 
             const result = parser.parse(reader);
@@ -388,7 +374,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('F4'),
                 data: [0.5],
-                length: 4
             };
 
             const result = parser.parse(reader);
@@ -408,7 +393,6 @@ describe('SecsParser Test', () => {
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('F8'),
                 data: [0.123456789],
-                length: 8
             };
 
             const result = parser.parse(reader);

@@ -27,13 +27,13 @@ type Secs2ItemDataType<T extends Secs2ItemSML> =
 export type Secs2ItemInfo<T extends Secs2ItemSML = any> = {
     sml: T,
     formatCode: number,
+    itemByteSize?: number
 };
 
 export type Secs2Item = {
     [K in Secs2ItemSML]: {
         info: Secs2ItemInfo<K>;
         name?: string;
-        length: number;
         data?: Secs2ItemDataType<K>;
     };
 }[Secs2ItemSML];

@@ -57,8 +57,6 @@ export class Secs2MessageParser {
         const itemType = itemInfo.sml;
         const result: Secs2Item = {
             info: itemInfo,
-            length: length,
-            
         };
 
         let resultData: Secs2Item['data'];
@@ -71,10 +69,10 @@ export class Secs2MessageParser {
             }
             resultData = data;
         } else {
-            resultData = this.resolver.handle(itemType, reader, length);
+            resultData = this.resolver.handle(itemType, reader, length / (itemInfo.itemByteSize ?? 1));
         }
         result.data = resultData;
-        
+
         return result;
     }
 }
