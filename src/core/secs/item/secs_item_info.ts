@@ -1,4 +1,4 @@
-import { Secs2ItemInfo, Secs2ItemSML } from "./secs";
+import { Secs2ItemInfo, Secs2ItemSML } from "./type";
 
 const secsItemInfoList: Secs2ItemInfo[] = [
     { sml: 'L', formatCode: 0o00 },

@@ -1,6 +1,6 @@
-import { BufferReader } from "../../util/BufferReader";
-import type { Secs2Item, Secs2ItemInfo } from "../item/secs";
-import { Secs2ItemInfoMap } from "../item/secs_item_info";
+import { Secs2Item, Secs2ItemInfo } from "@/core/secs/item/type";
+import { BufferReader } from "@/core/util/BufferReader";
+import { Secs2ItemInfoMap } from "@/core/secs/item/secs_item_info";
 import { ItemConvertResolver } from "./ItemResolver";
 
 /**
@@ -90,12 +90,5 @@ export class Secs2MessageParser {
         result.data = resultData;
 
         return result;
-    }
-
-    /**
-     * 아이템을 버퍼로 변환할 때 가져야 할 버퍼 길이를 계산한다.
-     */
-    calculateItemBufferLength() {
-
     }
 }

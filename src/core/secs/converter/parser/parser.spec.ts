@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Secs2MessageParser } from './converter';
-import { Secs2Item, Secs2ItemInfo } from '../item/secs';
-import { secsInfoMap } from '../item/secs_item_info';
-import { BufferReader } from '../../util/BufferReader';
+import { Secs2Item, Secs2ItemInfo } from '@/core/secs/item/type';
+import { secsInfoMap } from '@/core/secs/item/secs_item_info';
+import { BufferReader } from '@/core/util/BufferReader';
+import { Secs2MessageParser } from './parser';
 
 describe('SecsParser Test', () => {
     let parser: Secs2MessageParser;
@@ -84,7 +84,6 @@ describe('SecsParser Test', () => {
     });
 
     describe('parse', () => {
-
         it('데이터가 들어오면 타입에 맞게 파싱(L)', () => {
             const buffer = new ArrayBuffer(14);
             const view = new DataView(buffer);
