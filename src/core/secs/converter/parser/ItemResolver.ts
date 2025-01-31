@@ -1,5 +1,5 @@
-import { BufferReader } from "../../util/BufferReader";
-import { Secs2Item, Secs2ItemSML } from "../item/secs";
+import { BufferReader } from "@/core/util/BufferReader";
+import { Secs2Item, Secs2ItemSML } from "@/core/secs/item/type";
 
 type ItemConvertHandler = {
     (reader: BufferReader, length: number): Secs2Item['data']

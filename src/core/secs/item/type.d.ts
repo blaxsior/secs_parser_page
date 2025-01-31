@@ -1,8 +1,6 @@
 // // https://www.peergroup.com/resources/secs-message-language/
 // // SML info
 
-import { BufferReader } from "../../util/BufferReader";
-
 export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' | 
     // 'J' |
     'I8' | 'I1' | 'I2' | 'I4' |
