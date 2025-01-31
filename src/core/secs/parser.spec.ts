@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Secs2MessageParser } from './parser';
 import { Secs2ItemInfo } from './item/secs';
 import { secsInfoMap } from './item/secs_item_info';
+import { BufferReader } from '../util/BufferReader';
 
 describe('SecsParser Test', () => {
     let parser: Secs2MessageParser;
@@ -40,40 +41,51 @@ describe('SecsParser Test', () => {
     });
 
     describe('parseLength', () => {
+        let reader: BufferReader;
+        beforeEach(() => {
+            const buffer = new ArrayBuffer(4);
+            const view = new DataView(buffer);
+            view.setUint32(0, 0xAB_CD_EF_00);
+
+            reader = new BufferReader(buffer);
+        });
         it('count만큼 byte를 읽어 길이 획득', () => {
-            const data = new Uint8Array([0xAB, 0xCD, 0xEF]);
-            const idx = 1; // 인덱스 1부터
             const count = 2; // 2byte 읽기
 
-            const expected = 52719; // 0xCDEF
+            const expected = 43981; // 0xABCD
 
-            const result = parser.parseLength(data, idx, count);
+            const result = parser.parseLength(reader, count);
             expect(result).toEqual(expected);
         });
 
         it('읽는 byte 개수 = count가 [0..3]을 벗어나면 예외 발생', () => {
-            const data = new Uint8Array([0xAB, 0xCD, 0xEF]);
-            const idx = 1; // 인덱스 1부터
 
             const wrong_count1 = -1;
             expect(() => {
-                parser.parseLength(data, idx, wrong_count1);
+                parser.parseLength(reader, wrong_count1);
             }).toThrowError('count must be in');
+
+            reader.resetOffset();
 
             const wrong_count2 = 4;
             expect(() => {
-                parser.parseLength(data, idx, wrong_count2);
+                parser.parseLength(reader, wrong_count2);
             }).toThrowError('count must be in');
         });
 
-        it('idx 위치부터 count 개의 byte를 읽을 수 없다면 예외 발생', () => {
-            const data = new Uint8Array([0xAB, 0xCD, 0xEF]);
-            const idx = 1; // 인덱스 1부터
+        it('현재 버퍼 위치부터 count 개의 byte를 읽을 수 없다면 예외 발생', () => {
+            reader.readInt16();
             const wrong_count1 = 3; // 3개
 
             expect(() => {
-                parser.parseLength(data, idx, wrong_count1);
+                parser.parseLength(reader, wrong_count1);
             }).toThrowError('cannot read');
         });
     });
+
+    describe('parse', () => {
+        it('데이터가 들어오면 타입에 맞게 파싱', () => {
+            
+        });
+    })
 });
