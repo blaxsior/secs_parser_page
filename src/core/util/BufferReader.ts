@@ -11,6 +11,10 @@ class BufferReader {
         return this._offset;
     }
 
+    public get maxOffset() {
+        return this.view.byteLength;
+    }
+
     public resetOffset() {
         this._offset = 0;
     }

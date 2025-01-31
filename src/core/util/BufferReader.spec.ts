@@ -149,4 +149,12 @@ describe("BufferReader", () => {
         expect(data).toEqual(0.123456789); // 정확도 이슈로 0.123456789 그대로 저장 안됨
         expect(reader.offset).toEqual(8);
     });
+
+    it("maxOffset: 버퍼의 최대 바이트 길이 반환", () => {
+        const length = 3;
+        const buffer = new ArrayBuffer(length); // 바이트 길이 3
+        const reader = new BufferReader(buffer);
+        
+        expect(reader.maxOffset).toEqual(length);
+    })
 });
