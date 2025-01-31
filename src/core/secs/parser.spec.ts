@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Secs2MessageParser } from './parser';
-import { Secs2ItemInfo } from './item/secs';
+import { Secs2Item, Secs2ItemInfo } from './item/secs';
 import { secsInfoMap } from './item/secs_item_info';
 import { BufferReader } from '../util/BufferReader';
 
@@ -84,8 +84,336 @@ describe('SecsParser Test', () => {
     });
 
     describe('parse', () => {
-        it('데이터가 들어오면 타입에 맞게 파싱', () => {
-            
+
+        it('데이터가 들어오면 타입에 맞게 파싱(L)', () => {
+            const buffer = new ArrayBuffer(14);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b00000001); // List
+            view.setUint8(1, 0b00000010); // 2 element
+            view.setUint8(2, 0b00100001); // binary
+            view.setUint8(3, 0b00000001); // 1 byte long
+            view.setUint8(4, 0b00000100); // alarm set, category 4
+            view.setUint8(5, 0b01000001); // Item, ASCII
+            view.setUint8(6, 0b00000111); // 7 char
+            view.setUint8(7, 0b01010100); // ASCII T
+            view.setUint8(8, 0b00110001); // ASCII 1
+            view.setUint8(9, 0b00100000); // ASCII space
+            view.setUint8(10, 0b01001000); // ASCII H
+            view.setUint8(11, 0b01001001); // ASCII I
+            view.setUint8(12, 0b01000111); // ASCII G
+            view.setUint8(13, 0b01001000); // ASCII H
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: {
+                    sml: 'L',
+                    formatCode: 0o00
+                },
+                data: [
+                    {
+                        info: secsInfoMap.fromSML('B'),
+                        data: [4],
+                        length: 1
+                    },
+                    {
+                        info: secsInfoMap.fromSML('A'),
+                        data: 'T1 HIGH',
+                        length: 7
+                    }
+                ],
+                length: 2
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+        // 코드가 제대로 파싱되는지 검사
+        it('데이터가 들어오면 타입에 맞게 파싱 (Binary)', () => {
+            const buffer = new ArrayBuffer(3);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b00100001);
+            view.setUint8(1, 0b00000001);
+            view.setUint8(2, 0b10101010);
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('B'),
+                data: [0b10101010],
+                length: 1
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (Boolean)', () => {
+            const buffer = new ArrayBuffer(4);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b00100101);
+            view.setUint8(1, 0b00000010);
+            view.setUint8(2, 0b11110000); // 0이 아니면 true
+            view.setUint8(3, 0b00000000); // 0이면 false
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('BOOLEAN'),
+                data: [true, false],
+                length: 2
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        })
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (A)', () => {
+            const buffer = new ArrayBuffer(5);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b01000001);
+            view.setUint8(1, 0b00000011);
+            view.setUint8(2, 0b01000001); // ASCII A
+            view.setUint8(3, 0b01000010); // ASCII B
+            view.setUint8(4, 0b01000011); // ASCII C
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('A'),
+                data: 'ABC',
+                length: 3
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (I8)', () => {
+            const ui64max = 0xFFFF_FFFF_FFFF_FFFFn;
+
+            const buffer = new ArrayBuffer(10);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b01100001);
+            view.setUint8(1, 0b00001000);
+            view.setBigUint64(2, ui64max);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('I8'),
+                data: [-1n],
+                length: 8
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (I1)', () => {
+            const buffer = new ArrayBuffer(3);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b01100101);
+            view.setUint8(1, 0b00000001);
+            view.setUint8(2, 255);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('I1'),
+                data: [-1],
+                length: 1
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (I2)', () => {
+            const buffer = new ArrayBuffer(8);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b01101001);
+            view.setUint8(1, 0b00000110);
+            view.setInt16(2, 10);
+            view.setInt16(4, 20);
+            view.setInt16(6, 30);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('I2'),
+                data: [10, 20, 30],
+                length: 6
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (I4)', () => {
+            const buffer = new ArrayBuffer(6);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b01110001);
+            view.setUint8(1, 0b00000100);
+            view.setUint32(2, 0xFFFF_FFFF);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('I4'),
+                data: [-1],
+                length: 4
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (U8)', () => {
+            const ui64max = 0xFFFF_FFFF_FFFF_FFFFn;
+
+            const buffer = new ArrayBuffer(10);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b10100001);
+            view.setUint8(1, 0b00001000);
+            view.setBigUint64(2, ui64max);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('U8'),
+                data: [ui64max],
+                length: 8
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (U1)', () => {
+            const buffer = new ArrayBuffer(3);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b10100101);
+            view.setUint8(1, 0b00000001);
+            view.setUint8(2, 255);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('U1'),
+                data: [255],
+                length: 1
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (U2)', () => {
+            const buffer = new ArrayBuffer(4);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b10101001);
+            view.setUint8(1, 0b00000010);
+            view.setUint16(2, 0xFFFF);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('U2'),
+                data: [0xFFFF],
+                length: 2
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (U4)', () => {
+            const buffer = new ArrayBuffer(6);
+            const view = new DataView(buffer);
+
+            view.setUint8(0, 0b10110001);
+            view.setUint8(1, 0b00000100);
+            view.setUint32(2, 0xFFFF_FFFF);
+
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('U4'),
+                data: [0xFFFF_FFFF],
+                length: 4
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (F4)', () => {
+            const buffer = new ArrayBuffer(6);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b10010001);
+            view.setUint8(1, 0b00000100);
+            view.setFloat32(2, 0.5);
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('F4'),
+                data: [0.5],
+                length: 4
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
+        });
+
+        it('데이터가 들어오면 타입에 맞게 파싱 (F8)', () => {
+            const buffer = new ArrayBuffer(10);
+            const view = new DataView(buffer);
+            view.setUint8(0, 0b10000001);
+            view.setUint8(1, 0b00001000);
+            view.setFloat64(2, 0.123456789);
+            const reader = new BufferReader(buffer);
+            const parser = new Secs2MessageParser(secsInfoMap);
+
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('F8'),
+                data: [0.123456789],
+                length: 8
+            };
+
+            const result = parser.parse(reader);
+
+            expect(result).toEqual(expected);
         });
     })
 });

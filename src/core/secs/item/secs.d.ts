@@ -1,6 +1,8 @@
 // // https://www.peergroup.com/resources/secs-message-language/
 // // SML info
 
+import { BufferReader } from "../../util/BufferReader";
+
 export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' | 
     // 'J' |
     'I8' | 'I1' | 'I2' | 'I4' |
@@ -9,9 +11,9 @@ export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' |
 
 type Secs2ItemDataType<T extends Secs2ItemSML> =
     T extends 'L' ? Secs2Item[] :
-    T extends 'B' ? Uint8Array :
+    T extends 'B' ? number[] :
     T extends 'BOOLEAN' ? boolean[] :
-    T extends 'A' ? string :
+    T extends 'A' ? string:
     T extends
     // 'J' | 
     'I1' | 'I2' | 'I4' |
@@ -22,9 +24,9 @@ type Secs2ItemDataType<T extends Secs2ItemSML> =
 /**
  * SECS-II의 각 아이템 타입
  */
-export type Secs2ItemInfo<T extends Secs2ItemSML = Secs2ItemSML> = {
+export type Secs2ItemInfo<T extends Secs2ItemSML = any> = {
     sml: T,
-    formatCode: number
+    formatCode: number,
 };
 
 export type Secs2Item = {
@@ -32,6 +34,6 @@ export type Secs2Item = {
         info: Secs2ItemInfo<K>;
         name?: string;
         length: number;
-        data: Secs2ItemDataType<K>;
+        data?: Secs2ItemDataType<K>;
     };
 }[Secs2ItemSML];
