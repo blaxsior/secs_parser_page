@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { Secs2MessageParser } from './parser';
+import { Secs2MessageParser } from './converter';
 import { Secs2Item, Secs2ItemInfo } from '../item/secs';
 import { secsInfoMap } from '../item/secs_item_info';
 import { BufferReader } from '../../util/BufferReader';
