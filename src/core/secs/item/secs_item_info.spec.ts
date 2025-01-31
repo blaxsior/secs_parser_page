@@ -15,6 +15,7 @@ describe("Secs Item Map", () => {
             const sml = 'not_defined'; // 리스트
 
             expect(() => {
+                //@ts-ignore
                 secsInfoMap.fromSML(sml);
             }).toThrow();
         })

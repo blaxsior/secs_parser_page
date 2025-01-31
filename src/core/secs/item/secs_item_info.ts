@@ -1,4 +1,4 @@
-import { Secs2ItemInfo } from "./secs";
+import { Secs2ItemInfo, Secs2ItemSML } from "./secs";
 
 const secsItemInfoList: Secs2ItemInfo[] = [
     { sml: 'L', formatCode: 0o00 },
@@ -34,7 +34,7 @@ class Secs2ItemInfoMap {
         });
     }
 
-    fromSML(sml: string) {
+    fromSML(sml: Secs2ItemSML) {
         const result = this.smlToInfo.get(sml);
         if(result === undefined) throw new Error(`no secs-II type matched to sml ${sml}`);
         return result;
