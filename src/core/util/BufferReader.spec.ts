@@ -107,7 +107,7 @@ describe("BufferReader", () => {
         expect(reader.offset).toEqual(8);
     });
 
-    it("readInt64: unsigned int64 데이터 읽고 오프셋 8 이동", () => {
+    it("readUInt64: unsigned int64 데이터 읽고 오프셋 8 이동", () => {
         const ui64max = 0xFFFF_FFFF_FFFF_FFFFn;
 
         const buffer = new ArrayBuffer(8);
@@ -137,7 +137,6 @@ describe("BufferReader", () => {
     });
 
     it("readFloat64: float64 데이터 읽고 오프셋 8 이동", () => {
-
         const buffer = new ArrayBuffer(8);
         const view = new DataView(buffer);
         view.setFloat64(0, 0.123456789);
@@ -148,6 +147,22 @@ describe("BufferReader", () => {
 
         expect(data).toEqual(0.123456789); // 정확도 이슈로 0.123456789 그대로 저장 안됨
         expect(reader.offset).toEqual(8);
+    });
+
+    it("readString: string 데이터 읽고, 지정된 길이만큼 오프셋 이동", () => {
+        const length = 3;
+        const buffer = new ArrayBuffer(length);
+        const view = new DataView(buffer);
+        view.setUint8(0,0b01000001);
+        view.setUint8(1,0b01000010);
+        view.setUint8(2,0b01000011);
+
+        const reader = new BufferReader(buffer);
+
+        const data = reader.readString(length);
+
+        expect(data).toEqual('ABC');
+        expect(reader.offset).toEqual(3);
     });
 
     it("maxOffset: 버퍼의 최대 바이트 길이 반환", () => {
