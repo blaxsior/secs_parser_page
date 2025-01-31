@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Secs2MessageParser } from './parser';
-import { Secs2Item, Secs2ItemInfo } from './item/secs';
-import { secsInfoMap } from './item/secs_item_info';
-import { BufferReader } from '../util/BufferReader';
+import { Secs2Item, Secs2ItemInfo } from '../item/secs';
+import { secsInfoMap } from '../item/secs_item_info';
+import { BufferReader } from '../../util/BufferReader';
 
 describe('SecsParser Test', () => {
     let parser: Secs2MessageParser;
