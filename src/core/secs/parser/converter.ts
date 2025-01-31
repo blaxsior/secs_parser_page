@@ -15,6 +15,12 @@ export class Secs2MessageParser {
         this.resolver = new ItemConvertResolver();
     }
 
+    /**
+     * 아이템 길이 버퍼를 파싱한다.
+     * @param buffer 대상 버퍼
+     * @param count 파싱해야 하는 byte 수
+     * @returns 아이템의 길이
+     */
     parseLength(buffer: BufferReader, count: number): number {
         if (count < 0 || count > 3) throw new Error(`count must be in [0..3], but count is ${count}`);
         if ((buffer.offset + count) > buffer.maxOffset) throw new Error(`cannot read data at ${buffer.offset + count}, buffer length is ${buffer.maxOffset}`);
@@ -29,11 +35,21 @@ export class Secs2MessageParser {
         return length;
     }
 
+    /**
+     * secs-II 메시지의 byte length 정보를 파싱한다.
+     * @param data byte length 가 포함된 byte
+     * @returns byte length 값
+     */
     parseByteLength(data: number): number {
         const byteLengthMask = 0b000000_11;
         return data & byteLengthMask;
     }
 
+    /**
+     * secs-II 메시지의 format code 정보를 파싱한다.
+     * @param byte format code가 포함된 byte
+     * @returns 아이템의 타입
+     */
     parseType(byte: number): Secs2ItemInfo {
         // 상위 6bit
         const formatCodeMask = 0b111111_00;
@@ -74,5 +90,12 @@ export class Secs2MessageParser {
         result.data = resultData;
 
         return result;
+    }
+
+    /**
+     * 아이템을 버퍼로 변환할 때 가져야 할 버퍼 길이를 계산한다.
+     */
+    calculateItemBufferLength() {
+
     }
 }
