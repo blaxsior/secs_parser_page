@@ -87,13 +87,13 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
   return (
     <div>
-
-      <div tabIndex={0}
+      <div
+        tabIndex={0}
         ref={divRef}
         onFocus={focus}
         onBlur={blur}
         onClick={click}
-        className={clsx('grid font-mono justify-items-center items-center gap-1', className, isFocused && "border border-red-800")}
+        className={clsx('grid font-mono justify-items-center items-center gap-1', className)}
         onKeyDown={keyHandler}
         style={{
           gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
