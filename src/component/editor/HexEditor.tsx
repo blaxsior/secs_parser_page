@@ -34,6 +34,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
   }
 
   const updateItem = (idx: number) => {
+    if (inputRef.current.length === 0) return;
     let number = parseFunc(inputRef.current);
     if (!isNaN(number)) updateItemHandler(idx, number);
     inputRef.current = "";
@@ -62,18 +63,24 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
     switch (key) {
       case 'ArrowLeft':
-      case 'ArrowUp':
-        if (inputRef.current.length > 0) updateItem(selectedIdx);
+        updateItem(selectedIdx);
         focusElement(selectedIdx - 1);
         break;
       case 'ArrowRight':
-      case 'ArrowDown':
-        if (inputRef.current.length > 0) updateItem(selectedIdx);
+        updateItem(selectedIdx);
         focusElement(selectedIdx + 1);
+        break;
+      case 'ArrowUp':
+        updateItem(selectedIdx);
+        focusElement(selectedIdx - itemPerLine);
+        break;
+      case 'ArrowDown':
+        updateItem(selectedIdx);
+        focusElement(selectedIdx + itemPerLine);
         break;
       case 'Backspace':
         if (inputRef.current.length > 0) {
-          inputRef.current = "";
+          inputRef.current = inputRef.current.slice(0, inputRef.current.length - 1);
           setDisplayInput(inputRef.current);
         } else {
           deleteItem(selectedIdx);
