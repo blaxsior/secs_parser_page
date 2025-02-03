@@ -20,7 +20,7 @@ type HexEditorProps = {
 function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandler, displayFunc, parseFunc, charPerItem, validator, selectedIdx, className, itemPerLine = 8 }: HexEditorProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const { blur, click, focus, isFocused } = useFocus(divRef);
+  const { blur, click, focus } = useFocus(divRef);
 
   const inputRef = useRef<string>("");
   const [displayInput, setDisplayInput] = useState<string>("");
@@ -62,10 +62,12 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
     switch (key) {
       case 'ArrowLeft':
+      case 'ArrowUp':
         if (inputRef.current.length > 0) updateItem(selectedIdx);
         focusElement(selectedIdx - 1);
         break;
       case 'ArrowRight':
+      case 'ArrowDown':
         if (inputRef.current.length > 0) updateItem(selectedIdx);
         focusElement(selectedIdx + 1);
         break;
@@ -93,7 +95,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         onFocus={focus}
         onBlur={blur}
         onClick={click}
-        className={clsx('grid font-mono justify-items-center items-center gap-1', className)}
+        className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
         onKeyDown={keyHandler}
         style={{
           gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
@@ -103,28 +105,24 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
           <div
             key={idx}
             onClick={() => focusElement(idx)}
-            className={clsx(`text-center`,
+            className={clsx(`p-1 text-center`,
               selectedIdx === idx && "bg-yellow-300")}
             style={{ width: `${charPerItem}rem` }}
           >
             {selectedIdx === idx && inputRef.current.length > 0 ? (
-              <div
-                className="h-full w-full text-center"
-              >{displayInput}</div>
+              displayInput
             ) : (
               displayFunc(it)
             )}
           </div>
         ))}
         <div onClick={() => focusElement(bytes.length)}
-          className={clsx(`p-1 m-1 text-center border border-gray-400`,
+          className={clsx(`p-1 text-center border border-gray-400`,
             selectedIdx === bytes.length && "bg-yellow-300")}
           style={{ width: `${charPerItem}rem` }}
         >
           {selectedIdx === bytes.length && inputRef.current.length > 0 ? (
-            <div
-              className={clsx("h-full w-full text-center")}
-            >{displayInput}</div>
+            displayInput
           ) : (
             "+"
           )}</div>
