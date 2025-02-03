@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { secsInfoMap } from './secs_item_info';
+import { Secs2ItemInfo } from './type';
 
 describe("Secs Item Map", () => {
     describe("fromSML", () => {
         it("sml에 대응되는 타입이 정의되어 있으면 반환", () => {
             const sml = 'L'; // 리스트
-            const expected = { sml: 'L', formatCode: 0o00 };
+            const expected: Secs2ItemInfo<'L'> = { sml: 'L', formatCode: 0o00, itemSize: 1};
     
             const result = secsInfoMap.fromSML(sml);
             expect(expected).toEqual(result);
@@ -24,7 +25,7 @@ describe("Secs Item Map", () => {
     describe("fromFormatCode", () => {
         it("format code에 대응되는 타입이 정의되어 있으면 반환",() => {
             const formatCode = 0o00; // 리스트
-            const expected = { sml: 'L', formatCode: 0o00 };
+            const expected = { sml: 'L', formatCode: 0o00, itemSize: 1 };
     
             const result = secsInfoMap.fromFormatCode(formatCode);
             expect(expected).toEqual(result);

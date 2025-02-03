@@ -1,12 +1,12 @@
 import { BufferReader } from "@/core/util/BufferReader";
 import { Secs2Item, Secs2ItemSML } from "@/core/secs/item/type";
 
-type ItemConvertHandler = {
+type ItemParseHandler = {
     (reader: BufferReader, length: number): Secs2Item['data']
 }
 
-export class ItemConvertResolver {
-    private map: Map<Secs2ItemSML, ItemConvertHandler>;
+export class ItemParseResolver {
+    private map: Map<Secs2ItemSML, ItemParseHandler>;
 
     constructor() {
         this.map = new Map();

@@ -1,18 +1,18 @@
 import { Secs2Item, Secs2ItemInfo } from "@/core/secs/item/type";
 import { BufferReader } from "@/core/util/BufferReader";
 import { Secs2ItemInfoMap } from "@/core/secs/item/secs_item_info";
-import { ItemConvertResolver } from "./ItemResolver";
+import { ItemParseResolver } from "./ItemResolver";
 
 /**
  * @description secs-II 메시지를 파싱 & 언파싱하기 위한 클래스
  */
 export class Secs2MessageParser {
     private itemMap: Secs2ItemInfoMap;
-    private resolver: ItemConvertResolver;
+    private resolver: ItemParseResolver;
 
     constructor(itemMap: Secs2ItemInfoMap) {
         this.itemMap = itemMap;
-        this.resolver = new ItemConvertResolver();
+        this.resolver = new ItemParseResolver();
     }
 
     /**
@@ -85,7 +85,7 @@ export class Secs2MessageParser {
             }
             resultData = data;
         } else {
-            resultData = this.resolver.handle(itemType, reader, length / (itemInfo.itemByteSize ?? 1));
+            resultData = this.resolver.handle(itemType, reader, length / (itemInfo.itemSize ?? 1));
         }
         result.data = resultData;
 
