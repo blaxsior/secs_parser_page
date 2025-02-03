@@ -1,6 +1,7 @@
 import HexEditor from "@/component/editor/HexEditor";
 import { Secs2MessageParser } from "@/core/secs/converter/parser/parser";
 import { secsInfoMap } from "@/core/secs/item/secs_item_info";
+import { SecsItemToSMLSerializer } from "@/core/secs/sml/serializer";
 import { BufferReader } from "@/core/util/BufferReader";
 import { binaryStrToNum, hexStrToNum, numToBinaryStr, numToHexStr } from "@/core/util/convert";
 import { Button } from "@mui/material";
@@ -12,6 +13,7 @@ function MainPage() {
     const [result, setResult] = useState<string>("");
 
     const parser = useMemo(() => new Secs2MessageParser(secsInfoMap), []);
+    const smlSerializer = useMemo(() => new SecsItemToSMLSerializer(), []);
 
     const focusItem = (idx: number) => {
         setSelectedIdx(idx);
@@ -26,7 +28,8 @@ function MainPage() {
             const reader = new BufferReader(buffer);
 
             const item = parser.parse(reader);
-            setResult(JSON.stringify(item, null, 2));
+            const result = smlSerializer.serialize(item);
+            setResult(result);
         } catch {
             setResult("error!");
         }
@@ -96,7 +99,7 @@ function MainPage() {
                 {/* 결과창 쪽 */}
                 <div className="space-y-4">
                     <h1 className="text-xl">Result</h1>
-                    <div>{result}</div>
+                    <pre>{result}</pre>
                 </div>
 
             </div>
