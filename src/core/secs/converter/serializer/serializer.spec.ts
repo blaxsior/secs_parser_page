@@ -175,7 +175,7 @@ describe("Secs Serializer test", () => {
     
             expect(view.getUint8(0)).toBe(0b01100001); // I8 type
             expect(view.getUint8(1)).toBe(0b00001000); // 1 element
-            expect(view.getBigInt64(2)).toBe(-1n); // -1 as 64-bit signed integer
+            expect(view.getBigUint64(2)).toBe(ui64max); // -1 as 64-bit signed integer
         });
     
         it('I1 타입 데이터 직렬화', () => {
