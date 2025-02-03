@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { Secs2Item, Secs2ItemInfo } from '@/core/secs/item/type';
+import { secsInfoMap } from '@/core/secs/item/secs_item_info';
+import { BufferReader } from '@/core/util/BufferReader';
 import { Secs2MessageParser } from './parser';
-import { Secs2Item, Secs2ItemInfo } from '../item/secs';
-import { secsInfoMap } from '../item/secs_item_info';
-import { BufferReader } from '../../util/BufferReader';
 
 describe('SecsParser Test', () => {
     let parser: Secs2MessageParser;
@@ -14,7 +14,7 @@ describe('SecsParser Test', () => {
     describe('parseType', () => {
         it("포맷 코드를 파싱, 대응되는 타입 획득", () => {
             const data = 0b000000_01; // 길이가 1인 list
-            const expected: Secs2ItemInfo<'L'> = { sml: 'L', formatCode: 0o00 };
+            const expected: Secs2ItemInfo<'L'> = secsInfoMap.fromSML('L');
 
             const result: Secs2ItemInfo = parser.parseType(data);
 
@@ -84,7 +84,6 @@ describe('SecsParser Test', () => {
     });
 
     describe('parse', () => {
-
         it('데이터가 들어오면 타입에 맞게 파싱(L)', () => {
             const buffer = new ArrayBuffer(14);
             const view = new DataView(buffer);
@@ -107,10 +106,7 @@ describe('SecsParser Test', () => {
             const parser = new Secs2MessageParser(secsInfoMap);
 
             const expected: Secs2Item = {
-                info: {
-                    sml: 'L',
-                    formatCode: 0o00
-                },
+                info: secsInfoMap.fromSML('L'),
                 data: [
                     {
                         info: secsInfoMap.fromSML('B'),

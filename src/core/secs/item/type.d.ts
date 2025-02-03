@@ -1,8 +1,6 @@
 // // https://www.peergroup.com/resources/secs-message-language/
 // // SML info
 
-import { BufferReader } from "../../util/BufferReader";
-
 export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' | 
     // 'J' |
     'I8' | 'I1' | 'I2' | 'I4' |
@@ -27,7 +25,7 @@ type Secs2ItemDataType<T extends Secs2ItemSML> =
 export type Secs2ItemInfo<T extends Secs2ItemSML = any> = {
     sml: T,
     formatCode: number,
-    itemByteSize?: number
+    itemSize: number
 };
 
 export type Secs2Item = {

@@ -1,20 +1,20 @@
-import { Secs2ItemInfo, Secs2ItemSML } from "./secs";
+import { Secs2ItemInfo, Secs2ItemSML } from "./type";
 
 const secsItemInfoList: Secs2ItemInfo[] = [
-    { sml: 'L', formatCode: 0o00 },
-    { sml: 'B', formatCode: 0o10, itemByteSize: 1 },
-    { sml: 'BOOLEAN', formatCode: 0o11, itemByteSize: 1 },
-    { sml: 'A', formatCode: 0o20, itemByteSize: 1 },
-    { sml: 'I8', formatCode: 0o30, itemByteSize: 8 },
-    { sml: 'I1', formatCode: 0o31, itemByteSize: 1 },
-    { sml: 'I2', formatCode: 0o32, itemByteSize: 2 },
-    { sml: 'I4', formatCode: 0o34, itemByteSize: 4 },
-    { sml: 'F8', formatCode: 0o40, itemByteSize: 8 },
-    { sml: 'F4', formatCode: 0o44, itemByteSize: 4 },
-    { sml: 'U8', formatCode: 0o50, itemByteSize: 8 },
-    { sml: 'U1', formatCode: 0o51, itemByteSize: 1 },
-    { sml: 'U2', formatCode: 0o52, itemByteSize: 2 },
-    { sml: 'U4', formatCode: 0o54, itemByteSize: 4 },
+    { sml: 'L', formatCode: 0o00, itemSize: 1 },
+    { sml: 'B', formatCode: 0o10, itemSize: 1 },
+    { sml: 'BOOLEAN', formatCode: 0o11, itemSize: 1 },
+    { sml: 'A', formatCode: 0o20, itemSize: 1 },
+    { sml: 'I8', formatCode: 0o30, itemSize: 8 },
+    { sml: 'I1', formatCode: 0o31, itemSize: 1 },
+    { sml: 'I2', formatCode: 0o32, itemSize: 2 },
+    { sml: 'I4', formatCode: 0o34, itemSize: 4 },
+    { sml: 'F8', formatCode: 0o40, itemSize: 8 },
+    { sml: 'F4', formatCode: 0o44, itemSize: 4 },
+    { sml: 'U8', formatCode: 0o50, itemSize: 8 },
+    { sml: 'U1', formatCode: 0o51, itemSize: 1 },
+    { sml: 'U2', formatCode: 0o52, itemSize: 2 },
+    { sml: 'U4', formatCode: 0o54, itemSize: 4 },
 ] as const; // 나중에 필요하면 다른 폴더로 이동
 
 class Secs2ItemInfoMap {
