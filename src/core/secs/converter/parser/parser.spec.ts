@@ -14,7 +14,7 @@ describe('SecsParser Test', () => {
     describe('parseType', () => {
         it("포맷 코드를 파싱, 대응되는 타입 획득", () => {
             const data = 0b000000_01; // 길이가 1인 list
-            const expected: Secs2ItemInfo<'L'> = { sml: 'L', formatCode: 0o00 };
+            const expected: Secs2ItemInfo<'L'> = secsInfoMap.fromSML('L');
 
             const result: Secs2ItemInfo = parser.parseType(data);
 
@@ -106,10 +106,7 @@ describe('SecsParser Test', () => {
             const parser = new Secs2MessageParser(secsInfoMap);
 
             const expected: Secs2Item = {
-                info: {
-                    sml: 'L',
-                    formatCode: 0o00
-                },
+                info: secsInfoMap.fromSML('L'),
                 data: [
                     {
                         info: secsInfoMap.fromSML('B'),
