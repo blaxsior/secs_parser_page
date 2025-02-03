@@ -32,6 +32,6 @@ export type Secs2Item = {
     [K in Secs2ItemSML]: {
         info: Secs2ItemInfo<K>;
         name?: string;
-        data?: Secs2ItemDataType<K>;
+        data: Secs2ItemDataType<K>;
     };
 }[Secs2ItemSML];

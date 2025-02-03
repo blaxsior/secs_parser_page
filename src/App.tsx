@@ -1,8 +1,9 @@
+import MainLayout from "./layout/MainLayout"
 
 function App() {
-
   return (
-    <div className="bg-gray-200">
+    <div className="w-full">
+    <MainLayout/>
     </div>
   )
 }
