@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import clsx from 'clsx';
 import { useFocus } from "./hooks/useFocus";
 import { saturate } from "@/core/util/math";
@@ -25,29 +25,28 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
   const { blur, click, focus, isFocused } = useFocus(divRef, {
     onBlur: () => {
-      if(!isFocused) {
+      if (!isFocused) {
         inputRef.current = "";
         setDisplayInput(inputRef.current);
       }
     }
   });
+  const isWriting = useCallback(() => inputRef.current.length, [inputRef]);
 
   const focusElement = (idx: number, addidx = 0) => {
     // 0 = 첫번째 엘리먼트 / bytes.length + 1 = 엘리먼트 추가 시
     const targetIdx = saturate(idx, 0, bytes.length + addidx);
 
     if (targetIdx === selectedIdx) return;
+    if (isWriting()) updateItem(selectedIdx);
     focusItemHandler(targetIdx);
   }
 
-  const isWriting = useCallback(() => inputRef.current.length ,[inputRef]);
 
   const updateItem = (idx: number) => {
-    if (!isWriting()) return;
-
     let number = parseFunc(inputRef.current);
     if (!isNaN(number)) updateItemHandler(idx, number);
-    
+
     inputRef.current = "";
     setDisplayInput(inputRef.current);
   }
@@ -74,19 +73,15 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
     switch (key) {
       case 'ArrowLeft':
-        updateItem(selectedIdx);
         focusElement(selectedIdx - 1);
         break;
       case 'ArrowRight':
-        updateItem(selectedIdx);
         focusElement(selectedIdx + 1);
         break;
       case 'ArrowUp':
-        updateItem(selectedIdx);
         focusElement(selectedIdx - itemPerLine);
         break;
       case 'ArrowDown':
-        updateItem(selectedIdx);
         focusElement(selectedIdx + itemPerLine);
         break;
       case 'Backspace':
