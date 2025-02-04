@@ -15,6 +15,11 @@ function MainPage() {
     const parser = useMemo(() => new Secs2MessageParser(secsInfoMap), []);
     const smlSerializer = useMemo(() => new SecsItemToSMLSerializer(), []);
 
+    const clear = () => {
+        setBytes([]);
+        setResult("");
+    }
+
     const focusItem = (idx: number) => {
         setSelectedIdx(idx);
     };
@@ -51,8 +56,9 @@ function MainPage() {
 
     return (
         <div className="bg-white">
-            <nav className="p-2">
+            <nav className="p-2 !space-x-2">
                 <Button variant="outlined" onClick={parse}>parse</Button>
+                <Button variant='outlined' color="warning" onClick={clear}>clear</Button>
             </nav>
             <div className="flex flex-row space-x-8 p-2">
                 {/* 에디터 쪽 */}
@@ -99,7 +105,7 @@ function MainPage() {
                 {/* 결과창 쪽 */}
                 <div className="space-y-4">
                     <h1 className="text-xl">Result</h1>
-                    <pre>{result}</pre>
+                    <pre className="border border-gray-400 min-h-60 min-w-60">{result}</pre>
                 </div>
 
             </div>
