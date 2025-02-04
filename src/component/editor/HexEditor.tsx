@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import clsx from 'clsx';
 import { useFocus } from "./hooks/useFocus";
 import { saturate } from "@/core/util/math";
@@ -20,10 +20,17 @@ type HexEditorProps = {
 function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandler, displayFunc, parseFunc, charPerItem, validator, selectedIdx, className, itemPerLine = 8 }: HexEditorProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
-  const { blur, click, focus } = useFocus(divRef);
-
   const inputRef = useRef<string>("");
   const [displayInput, setDisplayInput] = useState<string>("");
+
+  const { blur, click, focus, isFocused } = useFocus(divRef, {
+    onBlur: () => {
+      if(!isFocused) {
+        inputRef.current = "";
+        setDisplayInput(inputRef.current);
+      }
+    }
+  });
 
   const focusElement = (idx: number, addidx = 0) => {
     // 0 = 첫번째 엘리먼트 / bytes.length + 1 = 엘리먼트 추가 시
@@ -33,10 +40,14 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
     focusItemHandler(targetIdx);
   }
 
+  const isWriting = useCallback(() => inputRef.current.length ,[inputRef]);
+
   const updateItem = (idx: number) => {
-    if (inputRef.current.length === 0) return;
+    if (!isWriting()) return;
+
     let number = parseFunc(inputRef.current);
     if (!isNaN(number)) updateItemHandler(idx, number);
+    
     inputRef.current = "";
     setDisplayInput(inputRef.current);
   }
@@ -79,7 +90,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         focusElement(selectedIdx + itemPerLine);
         break;
       case 'Backspace':
-        if (inputRef.current.length > 0) {
+        if (isWriting()) {
           inputRef.current = inputRef.current.slice(0, inputRef.current.length - 1);
           setDisplayInput(inputRef.current);
         } else {
@@ -92,7 +103,6 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         break;
     }
   }
-
 
   return (
     <div>
@@ -116,7 +126,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
               selectedIdx === idx && "bg-yellow-300")}
             style={{ width: `${charPerItem}rem` }}
           >
-            {selectedIdx === idx && inputRef.current.length > 0 ? (
+            {selectedIdx === idx && isWriting() ? (
               displayInput
             ) : (
               displayFunc(it)
@@ -128,7 +138,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
             selectedIdx === bytes.length && "bg-yellow-300")}
           style={{ width: `${charPerItem}rem` }}
         >
-          {selectedIdx === bytes.length && inputRef.current.length > 0 ? (
+          {selectedIdx === bytes.length && isWriting() ? (
             displayInput
           ) : (
             "+"
