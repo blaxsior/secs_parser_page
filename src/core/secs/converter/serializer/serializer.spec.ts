@@ -1,9 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Secs2MessageSerializer } from "./serializer";
 import { secsInfoMap } from "../../item/secs_item_info";
 import { Secs2Item } from "../../item/type";
 import { BufferWriter } from "@/core/util/BufferWriter";
-import { beforeEach } from "node:test";
 
 describe("Secs Serializer test", () => {
     let serializer: Secs2MessageSerializer;
