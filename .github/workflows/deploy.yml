@@ -1,14 +1,19 @@
 name: Deploy React to GitHub Pages
 
 on:
-  push:
-    branches: [ main, master ]
+  workflow_run:
+    workflows: [ "test-unit", "test-e2e" ] 
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
   deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+
+    # 모든 테스트가 완료된 경우
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Check out repository

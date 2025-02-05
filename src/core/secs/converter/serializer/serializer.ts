@@ -1,3 +1,4 @@
+import { Secs2ItemInfoMap } from "@/core/secs/item/secs_item_info";
 import { Secs2Item } from "@/core/secs/item/type";
 import { BufferWriter } from "@/core/util/BufferWriter";
 import { ItemSerializeResolver } from "./ItemResolver";
@@ -6,9 +7,11 @@ import { ItemSerializeResolver } from "./ItemResolver";
  * @description Secs2Item 객체를 secs-II 메시지로 변환하기 위한 클래스
  */
 export class Secs2MessageSerializer {
+    private itemMap: Secs2ItemInfoMap;
     private resolver: ItemSerializeResolver;
     
-    constructor() {
+    constructor(itemMap: Secs2ItemInfoMap) {
+        this.itemMap = itemMap;
         this.resolver = new ItemSerializeResolver();
     }
 
