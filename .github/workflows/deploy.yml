@@ -29,5 +29,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build  # React 프로젝트 빌드 결과물
+          publish_dir: ./dist  # React 프로젝트 빌드 결과물
           destination_dir: secs2-parser
