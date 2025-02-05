@@ -69,6 +69,7 @@ function MainPage() {
                             <h1>Binary</h1>
                             <hr />
                             <HexEditor
+                                aria-label="binary-editor"
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={8}
@@ -79,7 +80,6 @@ function MainPage() {
                                 deleteItemHandler={deleteItem}
                                 focusItemHandler={focusItem}
                                 selectedIdx={selectedIdx}
-
                             />
                         </div>
                         <div className="border-l border-gray-400"></div>
@@ -87,6 +87,7 @@ function MainPage() {
                             <div>Hex</div>
                             <hr />
                             <HexEditor
+                                aria-label="hex-editor"
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={2}
@@ -103,9 +104,13 @@ function MainPage() {
                     </div>
                 </div>
                 {/* 결과창 쪽 */}
-                <div className="space-y-4">
+                <div className="space-y-4" title="result panel">
                     <h1 className="text-xl">Result</h1>
-                    <pre className="border border-gray-400 min-h-60 min-w-60">{result}</pre>
+                    <pre
+                        aria-label="result panel"
+                        className="border border-gray-400 min-h-60 min-w-60">
+                        {result}
+                    </pre>
                 </div>
 
             </div>
