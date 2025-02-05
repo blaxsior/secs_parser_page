@@ -1,0 +1,38 @@
+name: Deploy React to GitHub Pages
+
+on:
+  workflow_run:
+    workflows: [ "test-unit", "test-e2e" ] 
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    # 모든 테스트가 완료된 경우
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build  # React 빌드 실행
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build  # React 프로젝트 빌드 결과물
+          destination_dir: secs2-parser

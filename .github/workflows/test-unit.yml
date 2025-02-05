@@ -1,4 +1,4 @@
-name: Node.js Test Workflow
+name: test-unit
 
 on:
   pull_request:
