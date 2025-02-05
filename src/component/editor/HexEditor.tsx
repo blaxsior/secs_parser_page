@@ -17,7 +17,7 @@ type HexEditorProps = {
   itemPerLine?: number;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandler, displayFunc, parseFunc, charPerItem, validator, selectedIdx, className, itemPerLine = 8 }: HexEditorProps) {
+function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandler, displayFunc, parseFunc, charPerItem, validator, selectedIdx, className, itemPerLine = 8, ...props }: HexEditorProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
   const inputRef = useRef<string>("");
@@ -100,45 +100,47 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
   }
 
   return (
-    <div>
-      <div
-        tabIndex={0}
-        ref={divRef}
-        onFocus={focus}
-        onBlur={blur}
-        onClick={click}
-        className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
-        onKeyDown={keyHandler}
-        style={{
-          gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
-        }}
-      >
-        {bytes.map((it, idx) => (
-          <div
-            key={idx}
-            onClick={() => focusElement(idx)}
-            className={clsx(`p-1 text-center`,
-              selectedIdx === idx && "bg-yellow-300")}
-            style={{ width: `${charPerItem}rem` }}
-          >
-            {selectedIdx === idx && isWriting() ? (
-              displayInput
-            ) : (
-              displayFunc(it)
-            )}
-          </div>
-        ))}
-        <div onClick={() => focusElement(bytes.length)}
-          className={clsx(`p-1 text-center border border-gray-400`,
-            selectedIdx === bytes.length && "bg-yellow-300")}
+    <div
+      tabIndex={0}
+      ref={divRef}
+      onFocus={focus}
+      onBlur={blur}
+      onClick={click}
+      className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
+      onKeyDown={keyHandler}
+      style={{
+        gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
+      }}
+      {...props}
+    >
+      {bytes.map((it, idx) => (
+        <div
+          aria-label={`${props["aria-label"]??""}_item-${idx}`}
+          key={idx}
+          onClick={() => focusElement(idx)}
+          className={clsx(`p-1 text-center`,
+            selectedIdx === idx && "bg-yellow-300")}
           style={{ width: `${charPerItem}rem` }}
         >
-          {selectedIdx === bytes.length && isWriting() ? (
+          {selectedIdx === idx && isWriting() ? (
             displayInput
           ) : (
-            "+"
-          )}</div>
-      </div>
+            displayFunc(it)
+          )}
+        </div>
+      ))}
+      <div 
+      aria-label={`${props["aria-label"]??""}_item-add`}
+      onClick={() => focusElement(bytes.length)}
+        className={clsx(`p-1 text-center border border-gray-400`,
+          selectedIdx === bytes.length && "bg-yellow-300")}
+        style={{ width: `${charPerItem}rem` }}
+      >
+        {selectedIdx === bytes.length && isWriting() ? (
+          displayInput
+        ) : (
+          "+"
+        )}</div>
     </div>
   )
 };
