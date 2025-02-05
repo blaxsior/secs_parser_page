@@ -71,7 +71,8 @@ export class Secs2MessageParser {
 
         // 아이템 타입에 따라 파싱하는 단계...
         const itemType = itemInfo.sml;
-        const result: Secs2Item = {
+
+        const result: Partial<Secs2Item> = {
             info: itemInfo,
         };
 
@@ -89,6 +90,6 @@ export class Secs2MessageParser {
         }
         result.data = resultData;
 
-        return result;
+        return result as Secs2Item;
     }
 }
