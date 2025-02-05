@@ -16,16 +16,16 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 'lts/*'   # 사용할 Node.js 버전
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build  # React 빌드 실행
