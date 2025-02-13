@@ -76,7 +76,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         focusElement(selectedIdx - 1);
         break;
       case 'ArrowRight':
-        focusElement(selectedIdx + 1);
+        focusElement(selectedIdx + 1, 1);
         break;
       case 'ArrowUp':
         focusElement(selectedIdx - itemPerLine);
