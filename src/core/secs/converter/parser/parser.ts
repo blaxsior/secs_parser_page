@@ -36,13 +36,16 @@ export class Secs2MessageParser {
     }
 
     /**
-     * secs-II 메시지의 byte length 정보를 파싱한다.
+     * secs-II 메시지의 byte length 정보를 파싱한다. 파싱한 값이 0이면 예외
      * @param data byte length 가 포함된 byte
      * @returns byte length 값
      */
     parseByteLength(data: number): number {
         const byteLengthMask = 0b000000_11;
-        return data & byteLengthMask;
+        const byteLength = data & byteLengthMask;
+
+        if(byteLength === 0) throw new Error("byte length must be in [1..3]");
+        return byteLength;
     }
 
     /**
