@@ -38,6 +38,17 @@ describe('SecsParser Test', () => {
             const result: number = parser.parseByteLength(data);
             expect(result).toEqual(expected);
         });
+
+        it("length byte는 0이 될 수 없음", () => {
+            //근거: actual number of bytes in the message for one item is the item length plus 2, 3, 4 bytes for the item header
+            //header 길이가 최소 2라는 것은 length byte가 최소 1 byte라는 것
+
+            const data = 0b000000_00; // byte 길이 = 0
+            
+            expect(() => {
+                parser.parseByteLength(data);
+            }).toThrow();
+        })
     });
 
     describe('parseLength', () => {
