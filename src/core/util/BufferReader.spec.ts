@@ -145,7 +145,7 @@ describe("BufferReader", () => {
 
         const data = reader.readFloat64();
 
-        expect(data).toEqual(0.123456789); // 정확도 이슈로 0.123456789 그대로 저장 안됨
+        expect(data).toEqual(0.123456789);
         expect(reader.offset).toEqual(8);
     });
 
