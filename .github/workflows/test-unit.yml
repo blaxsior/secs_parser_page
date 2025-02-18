@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-  test:
+  test_unit:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
