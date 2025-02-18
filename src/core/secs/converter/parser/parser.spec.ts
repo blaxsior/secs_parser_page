@@ -69,9 +69,9 @@ describe('SecsParser Test', () => {
             expect(result).toEqual(expected);
         });
 
-        it('읽는 byte 개수 = count가 [0..3]을 벗어나면 예외 발생', () => {
+        it('읽는 byte 개수 = count가 [1..3]을 벗어나면 예외 발생', () => {
 
-            const wrong_count1 = -1;
+            const wrong_count1 = 0;
             expect(() => {
                 parser.parseLength(reader, wrong_count1);
             }).toThrowError('count must be in');

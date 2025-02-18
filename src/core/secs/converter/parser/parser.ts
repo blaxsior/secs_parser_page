@@ -22,7 +22,7 @@ export class Secs2MessageParser {
      * @returns 아이템의 길이
      */
     parseLength(buffer: BufferReader, count: number): number {
-        if (count < 0 || count > 3) throw new Error(`count must be in [0..3], but count is ${count}`);
+        if (count < 1 || count > 3) throw new Error(`count must be in [0..3], but count is ${count}`);
         if ((buffer.offset + count) > buffer.maxOffset) throw new Error(`cannot read data at ${buffer.offset + count}, buffer length is ${buffer.maxOffset}`);
 
         let length = 0;
