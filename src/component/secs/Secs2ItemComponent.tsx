@@ -1,47 +1,54 @@
-const itemSMLs =
-    ['L', 'B', 'BOOLEAN', 'A',
-        // 'J' |
-        'I8', 'I1', 'I2', 'I4',
-        'F8', 'F4',
-        'U8', 'U1', 'U2', 'U4'];
+import { ItemSMLS } from "@/core/secs/const";
+import { itemValidator as validate } from "./util";
+import type { Secs2CompData, Secs2CompItem, Secs2ItemSML } from "@/core/secs/item/type";
 
-function Secs2ItemComponent({ value, onChange, onRemove, path }: Secs2ItemComponentProps) {
-    const { item, type } = value;
-    const changeType = (newType: string) => {
-        onChange({ ...value, type: newType, item: [] });
+type Secs2ItemComponentProps = {
+    value: Secs2CompItem;
+    onChange: (newValue: Secs2CompItem) => void;
+    onRemove: () => void;
+    root?: boolean;
+}
+function Secs2ItemComponent({ value, onChange, onRemove, root }: Secs2ItemComponentProps) {
+    const { data: item, type } = value;
+    const changeType = (newType: Secs2ItemSML) => {
+        onChange({ ...value, type: newType, data: [] });
     };
 
-    const changeValue = (val: any, idx: number) => {
-        const newItem = [...value.item];
+    const changeValue = (val: string, idx: number) => {
+        if (val && !validate(type)(val)) return;
+
+        const newItem = [...value.data] as (string | null)[];
         newItem[idx] = val;
-        onChange({ ...value, item: newItem });
+        onChange({ ...value, data: newItem });
     };
 
     const addItem = () => {
-        const newItem = value.type === 'L' ? { type: 'L', item: [] } : null;
-        onChange({ ...value, item: [...value.item, newItem] });
+        const newItem: Secs2CompData = value.type === 'L' ?
+            { type: 'L', data: [] }
+            : null;
+        onChange({ ...value, data: [...value.data, newItem] });
     };
 
     const removeItem = () => {
-        onChange({ ...value, item: value.item.slice(0, -1) });
+        onChange({ ...value, data: value.data.slice(0, -1) });
     };
 
     const updateChildItem = (idx: number, newChild: Secs2CompItem) => {
-        const newItem = [...value.item];
+        const newItem = [...value.data];
         newItem[idx] = newChild;
-        onChange({ ...value, item: newItem });
+        onChange({ ...value, data: newItem });
     };
 
     const removeChildItem = (idx: number) => {
-        const newItem = value.item.filter((_, i) => i !== idx);
-        onChange({ ...value, item: newItem });
+        const newItem = value.data.filter((_, i) => i !== idx);
+        onChange({ ...value, data: newItem });
     };
     return (
-        <div className="px-4">
+        <div className="px-4 text-lg">
             <span className="inline-flex flex-row items-center gap-1">
                 <span>&lt;</span>
-                <select onChange={(e) => changeType(e.target.value)}>
-                    {itemSMLs.map(it => (
+                <select onChange={(e) => changeType(e.target.value as Secs2ItemSML)}>
+                    {ItemSMLS.map(it => (
                         <option key={it} value={it}>{it}</option>
                     ))}
                 </select>
@@ -66,7 +73,7 @@ function Secs2ItemComponent({ value, onChange, onRemove, path }: Secs2ItemCompon
                     className="border border-red-400 w-[1.5rem] rounded-md active:bg-red-300"
                     onClick={removeItem}>-</button>
                 {
-                    path.length > 0 &&
+                    !root &&
                     <button
                         className="border border-red-400 bg-red-300 w-[1.5rem] rounded-md active:bg-red-400"
                         onClick={onRemove}>x</button>
@@ -74,13 +81,12 @@ function Secs2ItemComponent({ value, onChange, onRemove, path }: Secs2ItemCompon
             </span>
             {type === 'L' && item.length > 0 &&
                 <span className="flex flex-col">
-                    {value.item.map((child, idx) => (
+                    {value.data.map((child, idx) => (
                         <Secs2ItemComponent
                             key={idx}
                             value={child as Secs2CompItem}
                             onChange={(newChild) => updateChildItem(idx, newChild)}
                             onRemove={() => removeChildItem(idx)}
-                            path={[...path, idx]}
                         />
                     ))}
                 </span>

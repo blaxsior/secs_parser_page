@@ -19,7 +19,7 @@ export class Secs2MessageSerializer {
      * @param BUF_LENGTH 버퍼의 길이. 아이템 길이를 미리 계산할 수 있는 경우 사용
      * @returns 직렬화 된 버퍼
      */
-    serialize(item: Secs2Item, writer: BufferWriter, BUF_LENGTH: number = 256) {
+    serialize(item: Secs2Item, writer?: BufferWriter, BUF_LENGTH: number = 256) {
         if(!writer) writer = new BufferWriter(BUF_LENGTH);
 
         // 1.아이템 타입과 길이 정보 획득
@@ -41,7 +41,7 @@ export class Secs2MessageSerializer {
         }
 
         // 작성할 데이터 없으면 더 이상 X
-        if(!item.data) return;
+        if(!item.data) return writer.buffer;
 
         // write body
         if(info.sml === 'L') { // 리스트는 재귀 처리

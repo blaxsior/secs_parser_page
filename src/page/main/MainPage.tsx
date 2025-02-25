@@ -1,5 +1,4 @@
 import HexEditor from "@/component/editor/HexEditor";
-import Secs2ItemEditor from "@/component/secs/Secs2ItemEditor";
 import { Secs2MessageParser } from "@/core/secs/converter/parser/parser";
 import { secsInfoMap } from "@/core/secs/item/secs_item_info";
 import { SecsItemToSMLSerializer } from "@/core/secs/sml/serializer";
@@ -56,15 +55,16 @@ function MainPage() {
     const regex2 = /[0-1]/;
 
     return (
-        <div className="bg-white">
-            <nav className="p-2 !space-x-2">
+        <div className="space-y-4">
+            <nav className="space-x-2!" aria-description="action buttons">
                 <Button variant="outlined" onClick={parse}>parse</Button>
                 <Button variant='outlined' color="warning" onClick={clear}>clear</Button>
             </nav>
-            <div className="flex flex-row space-x-8 p-2">
+            <h1 className="text-3xl">Byte Msg to Item</h1>
+            <div className="flex flex-row space-x-8">
                 {/* 에디터 쪽 */}
                 <div className="space-y-4">
-                    <h1 className="text-xl">Editor</h1>
+                    <h2 className="text-xl">Editor</h2>
                     <div className="flex flex-row border border-gray-400 w-fit">
                         <div className="m-1 space-y-2">
                             <h1>Binary</h1>
@@ -99,14 +99,13 @@ function MainPage() {
                                 deleteItemHandler={deleteItem}
                                 focusItemHandler={focusItem}
                                 selectedIdx={selectedIdx}
-
                             />
                         </div>
                     </div>
                 </div>
                 {/* 결과창 쪽 */}
                 <div className="space-y-4" title="result panel">
-                    <h1 className="text-xl">Result</h1>
+                    <h2 className="text-xl">Result</h2>
                     <pre
                         aria-label="result panel"
                         className="border border-gray-400 min-h-60 min-w-60">

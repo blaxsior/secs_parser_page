@@ -18,7 +18,7 @@ type Secs2ItemDataType<T extends Secs2ItemSML = undefined> =
     'F8' | 'F4' |
     'U1' | 'U2' | 'U4' ? number[] :
     T extends 'I8' | 'U8' ? bigint[] :
-    any[];
+    any;
 /**
  * SECS-II의 각 아이템 타입
  */
@@ -35,3 +35,21 @@ export type Secs2Item = {
         data: Secs2ItemDataType<K>;
     };
 }[Secs2ItemSML];
+
+export type Secs2CompData = (string | null | Secs2CompItem);
+
+export type Secs2CompItem =
+ {
+    type: Secs2ItemSML;
+    data: Secs2CompData[];
+}
+
+// | {
+//     type: Exclude<Secs2ItemSML, 'L'>;
+//     data: (string | null)[];
+// } | {
+//     type: 'L';
+//     data: Secs2CompItem[];
+// };
+
+// 타입 매핑 할 수 있는 방법 찾아보자...
