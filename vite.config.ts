@@ -14,5 +14,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     }
   },
-  base: process.env.CI && "/secs_parser_page"
+  base: process.env.CI && "./"
 })
