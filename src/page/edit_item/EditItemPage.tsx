@@ -56,7 +56,7 @@ function EditItemPage() {
                             <h1>Binary</h1>
                             <hr />
                             <HexViewer
-                                aria-label="binary-editor"
+                                aria-label="binary-viewer"
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={8}
@@ -70,7 +70,7 @@ function EditItemPage() {
                             <div>Hex</div>
                             <hr />
                             <HexViewer
-                                aria-label="hex-editor"
+                                aria-label="hex-viewer"
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={2}
