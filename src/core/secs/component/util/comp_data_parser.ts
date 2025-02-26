@@ -8,6 +8,10 @@ export class Secs2CompItemDataParser {
         this.parseMap = new Map();
         this.parseMap.set('A', this.parseString);
         this.parseMap.set('BOOLEAN', this.parseBoolean);
+        
+        this.parseMap.set('I8', this.parseBigint);
+        this.parseMap.set('U8', this.parseBigint);
+
         this.parseMap.set('F4', this.parseFloat);
         this.parseMap.set('F8', this.parseFloat);
     }
@@ -15,6 +19,15 @@ export class Secs2CompItemDataParser {
     parse<T extends Secs2ItemSML>(key: T, data: string[]): Secs2ItemDataType<T> {
         let parseFunc = this.parseMap.get(key) ?? this.parseInt;
         return parseFunc(data);
+    }
+
+    parseBigint(item: string[]): bigint[] {
+        const items: bigint[] = [];
+        for (const data of item) {
+            if(!validateInt(data)) throw new Error(`${data} is not integer`);
+            items.push(BigInt(data));
+        }
+        return items;
     }
 
     private parseInt(item: string[]): number[] {
@@ -45,6 +58,6 @@ export class Secs2CompItemDataParser {
     }
 
     private parseString(item: string[]): string {
-        return item.join(); // 띄어서 표현 가능하나 붙어 있는 것으로 간주.
+        return item.join(''); // 띄어서 표현 가능하나 붙어 있는 것으로 간주.
     }
 }
