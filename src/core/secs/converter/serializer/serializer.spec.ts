@@ -119,7 +119,7 @@ describe("Secs Serializer test", () => {
         it('Boolean 타입 데이터 직렬화', () => {
             const item: Secs2Item = {
                 info: secsInfoMap.fromSML('BOOLEAN'),
-                data: [true, false],
+                data: [240, 0],
             };
 
             const writer = new BufferWriter();
@@ -131,7 +131,7 @@ describe("Secs Serializer test", () => {
 
             expect(view.getUint8(0)).toBe(0b00100101); // Boolean type
             expect(view.getUint8(1)).toBe(0b00000010); // 2 elements
-            expect(view.getUint8(2)).toBe(0b00000001); // true
+            expect(view.getUint8(2)).toBe(0b11110000); // true
             expect(view.getUint8(3)).toBe(0b00000000); // false
         });
 

@@ -166,7 +166,7 @@ describe('SecsParser Test', () => {
 
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('BOOLEAN'),
-                data: [true, false],
+                data: [240, 0],
             };
 
             const result = parser.parse(reader);
