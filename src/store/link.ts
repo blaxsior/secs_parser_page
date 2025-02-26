@@ -9,7 +9,7 @@ type LinkAction = {
 }
 
 const useLinkStore = create<LinkState & LinkAction>((set) => ({
-    link: 'secs-to-item', // 초기 페이지?
+    link: '/', // 초기 페이지?
     updateLink: (new_link) => {
         set({link: new_link});
     }

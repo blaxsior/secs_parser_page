@@ -1,16 +1,15 @@
-import { Route, Routes } from "react-router"
 import Main from "./layout/Main"
 import MainPage from "./page/main/MainPage"
 import EditItemPage from "./page/edit_item/EditItemPage"
+import Route from "./component/router/Route"
 
 function App() {
   return (
-    <Routes>
-      <Route element={<Main />}>
-        <Route index element={<MainPage />} />
-        <Route path="item-to-secs" element={<EditItemPage />} />
-      </Route>
-    </Routes>
+    <Main>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/item-to-secs" element={<EditItemPage />} />
+    </Main>
+
   )
 }
 
