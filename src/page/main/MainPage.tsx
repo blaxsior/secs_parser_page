@@ -1,28 +1,25 @@
 import HexEditor from "@/component/editor/HexEditor";
+import { useByteEditor } from "@/component/editor/hooks/useEditor";
+import { binRegex, hexRegex } from "@/component/editor/util";
 import { Secs2MessageParser } from "@/core/secs/converter/parser/parser";
 import { secsInfoMap } from "@/core/secs/item/secs_item_info";
 import { SecsItemToSMLSerializer } from "@/core/secs/sml/serializer";
 import { BufferReader } from "@/core/util/BufferReader";
 import { binaryStrToNum, hexStrToNum, numToBinaryStr, numToHexStr } from "@/core/util/convert";
 import { Button } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+
+const parser = new Secs2MessageParser(secsInfoMap);
+const smlSerializer = new SecsItemToSMLSerializer();
 
 function MainPage() {
-    const [bytes, setBytes] = useState<number[]>([]);
-    const [selectedIdx, setSelectedIdx] = useState(0);
+    const { bytes, selectedIdx, clear: clearByte, deleteItem, focusItem, updateItem } = useByteEditor();
     const [result, setResult] = useState<string>("");
 
-    const parser = useMemo(() => new Secs2MessageParser(secsInfoMap), []);
-    const smlSerializer = useMemo(() => new SecsItemToSMLSerializer(), []);
-
     const clear = () => {
-        setBytes([]);
+        clearByte();
         setResult("");
     }
-
-    const focusItem = (idx: number) => {
-        setSelectedIdx(idx);
-    };
 
     const parse = () => {
         try {
@@ -39,20 +36,6 @@ function MainPage() {
             setResult("error!");
         }
     }
-
-    const updateItem = (idx: number, value: number) => {
-        console.log(idx, bytes.length);
-        const item = [...bytes];
-        item[idx] = value;
-        setBytes(item);
-    }
-
-    const deleteItem = (idx: number) => {
-        setBytes(bytes.filter((_, itemIdx) => itemIdx !== idx));
-    }
-
-    const regex1 = /[A-Fa-f0-9]/;
-    const regex2 = /[0-1]/;
 
     return (
         <div className="space-y-4">
@@ -74,7 +57,7 @@ function MainPage() {
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={8}
-                                validator={regex2}
+                                validator={binRegex}
                                 displayFunc={numToBinaryStr}
                                 parseFunc={binaryStrToNum}
                                 updateItemHandler={updateItem}
@@ -92,7 +75,7 @@ function MainPage() {
                                 itemPerLine={2}
                                 bytes={bytes}
                                 charPerItem={2}
-                                validator={regex1}
+                                validator={hexRegex}
                                 displayFunc={numToHexStr}
                                 parseFunc={hexStrToNum}
                                 updateItemHandler={updateItem}

@@ -23,7 +23,7 @@ export class Secs2CompItemConverter {
             for(const it of item.data) {
                 resultData.push(this.convert(it as Secs2CompItem));
             }
-        } else if(item.type === 'A') {
+        } else {
             resultData = this.parser.parse(
                 item.type, 
                 item.data.filter(it => it !== null) as string[]

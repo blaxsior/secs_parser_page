@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import clsx from 'clsx';
 import { useFocus } from "./hooks/useFocus";
 import { saturate } from "@/core/util/math";
@@ -31,7 +31,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
       }
     }
   });
-  const isWriting = useCallback(() => inputRef.current.length, [inputRef]);
+  const isWriting = () => inputRef.current.length;
 
   const focusElement = (idx: number, addidx = 0) => {
     // 0 = 첫번째 엘리먼트 / bytes.length + 1 = 엘리먼트 추가 시
@@ -76,7 +76,8 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         focusElement(selectedIdx - 1);
         break;
       case 'ArrowRight':
-        focusElement(selectedIdx + 1, 1);
+        const addIdx = isWriting() ? 1 : 0;
+        focusElement(selectedIdx + 1, addIdx);
         break;
       case 'ArrowUp':
         focusElement(selectedIdx - itemPerLine);

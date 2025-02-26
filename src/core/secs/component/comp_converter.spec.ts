@@ -41,6 +41,21 @@ describe('ComponentItemConverter', () => {
             expect(result).toEqual(expected);
         });
 
+        it("SecsComponentItem을 SecsItem으로 변환한다.(B)", () => {
+            const item: Secs2CompItem = {
+                type: 'B',
+                data: ['10', '46']
+            };
+            
+            const expected: Secs2Item = {
+                info: secsInfoMap.fromSML('B'),
+                data: [10, 46]
+            };
+
+            const result: Secs2Item = converter.convert(item);
+            expect(result).toEqual(expected);
+        });
+
         it("SecsComponentItem을 SecsItem으로 변환한다.(boolean)", () => {
             const item: Secs2CompItem = {
                 type: 'BOOLEAN',
