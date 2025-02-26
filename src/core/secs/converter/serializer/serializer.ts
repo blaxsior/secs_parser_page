@@ -24,8 +24,14 @@ export class Secs2MessageSerializer {
 
         // 1.아이템 타입과 길이 정보 획득
         const info = item.info;
-        
-        const itemLength = info.itemSize * (item.data?.length ?? 0);
+
+        // 2. 아이템 사이즈 획득. 문자열의 경우만 조금 다름.
+        let itemLength: number;
+        if(info.sml === 'A') {
+            itemLength = new TextEncoder().encode(item.data as string).byteLength; 
+        } else {
+            itemLength = info.itemSize * (item.data?.length ?? 0);
+        }
         const lengthBytes = this.getLengthBytes(itemLength);
 
         const formatCode = info.formatCode;
