@@ -1,5 +1,8 @@
 import clsx from 'clsx';
 import { saturate } from "@/core/util/math";
+import { useRef } from 'react';
+import { copyToClipboard } from '@/core/util/clipboard';
+import { CopyIcon } from 'lucide-react';
 
 type HexViewerProps = {
     bytes: number[],
@@ -12,6 +15,14 @@ type HexViewerProps = {
 } & React.HTMLAttributes<HTMLDivElement>;
 
 function HexViewer({ bytes, focusItemHandler, displayFunc, charPerItem, selectedIdx, className, itemPerLine = 8, ...props }: HexViewerProps) {
+    const divRef = useRef<HTMLDivElement>(null);
+
+    const onCopy = async () => {
+        const data = divRef.current?.textContent;
+        if (!data) return;
+
+        await copyToClipboard(data);
+    };
 
     const focusElement = (idx: number) => {
         // + 가 없어서 byte끼리만 이동 가능 = length - 1
@@ -42,25 +53,39 @@ function HexViewer({ bytes, focusItemHandler, displayFunc, charPerItem, selected
     }
 
     return (
-        <div
-            tabIndex={0}
-            className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
-            onKeyDown={keyHandler}
-            style={{
-                gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
-            }}
-            {...props}
-        >
-            {bytes.map((it, idx) => (
-                <div
-                    aria-label={`${props["aria-label"] ?? ""}_item-${idx}`}
-                    key={idx}
-                    onClick={() => focusElement(idx)}
-                    className={clsx(`p-1 text-center`,
-                        selectedIdx === idx && "bg-yellow-300")}
-                    style={{ width: `${charPerItem}rem` }}
-                >{displayFunc(it)}</div>
-            ))}
+        <div className="space-y-2">
+            <div className="flex flex-row justify-end">
+                <button
+                    className="p-1 border rounded-md border-gray-300 active:border-gray-400"
+                    onClick={onCopy}
+                    aria-label='copy data'
+                    title="copy data"
+                >
+                    <CopyIcon color="gray" width={20} height={20} />
+                </button>
+            </div>
+            <hr />
+            <div
+                ref={divRef}
+                tabIndex={0}
+                className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
+                onKeyDown={keyHandler}
+                style={{
+                    gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`,
+                }}
+                {...props}
+            >
+                {bytes.map((it, idx) => (
+                    <div
+                        aria-label={`${props["aria-label"] ?? ""}_item-${idx}`}
+                        key={idx}
+                        onClick={() => focusElement(idx)}
+                        className={clsx(`p-1 text-center`,
+                            selectedIdx === idx && "bg-yellow-300")}
+                        style={{ width: `${charPerItem}rem` }}
+                    >{displayFunc(it)}</div>
+                ))}
+            </div>
         </div>
     )
 };

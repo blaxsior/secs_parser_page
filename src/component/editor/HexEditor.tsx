@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import clsx from 'clsx';
 import { useFocus } from "./hooks/useFocus";
 import { saturate } from "@/core/util/math";
+import { CopyIcon } from 'lucide-react';
+import { copyToClipboard } from "@/core/util/clipboard";
 
 type HexEditorProps = {
   bytes: number[],
@@ -22,6 +24,13 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
   const inputRef = useRef<string>("");
   const [displayInput, setDisplayInput] = useState<string>("");
+
+  const onCopy = async () => {
+    const data = divRef.current?.textContent?.replace('+', ''); 
+    if(!data) return;
+
+    await copyToClipboard(data);
+  };
 
   const { blur, click, focus, isFocused } = useFocus(divRef, {
     onBlur: () => {
@@ -101,47 +110,60 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
   }
 
   return (
-    <div
-      tabIndex={0}
-      ref={divRef}
-      onFocus={focus}
-      onBlur={blur}
-      onClick={click}
-      className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
-      onKeyDown={keyHandler}
-      style={{
-        gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
-      }}
-      {...props}
-    >
-      {bytes.map((it, idx) => (
+    <div className="space-y-2">
+      <div className="flex flex-row justify-end">
+        <button
+          className="p-1 border rounded-md border-gray-300 active:border-gray-400"
+          onClick={onCopy}
+          aria-label='copy data'
+          title="copy data"
+          >
+          <CopyIcon color="gray" width={20} height={20} />
+        </button>
+      </div>
+      <hr />
+      <div
+        tabIndex={0}
+        ref={divRef}
+        onFocus={focus}
+        onBlur={blur}
+        onClick={click}
+        className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
+        onKeyDown={keyHandler}
+        style={{
+          gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
+        }}
+        {...props}
+      >
+        {bytes.map((it, idx) => (
+          <div
+            aria-label={`${props["aria-label"] ?? ""}_item-${idx}`}
+            key={idx}
+            onClick={() => focusElement(idx)}
+            className={clsx(`p-1 text-center`,
+              selectedIdx === idx && "bg-yellow-300")}
+            style={{ width: `${charPerItem}rem` }}
+          >
+            {selectedIdx === idx && isWriting() ? (
+              displayInput
+            ) : (
+              displayFunc(it)
+            )}
+          </div>
+        ))}
         <div
-          aria-label={`${props["aria-label"]??""}_item-${idx}`}
-          key={idx}
-          onClick={() => focusElement(idx)}
-          className={clsx(`p-1 text-center`,
-            selectedIdx === idx && "bg-yellow-300")}
+          aria-label={`${props["aria-label"] ?? ""}_item-add`}
+          onClick={() => focusElement(bytes.length)}
+          className={clsx(`p-1 text-center border border-gray-400`,
+            selectedIdx === bytes.length && "bg-yellow-300")}
           style={{ width: `${charPerItem}rem` }}
         >
-          {selectedIdx === idx && isWriting() ? (
+          {selectedIdx === bytes.length && isWriting() ? (
             displayInput
           ) : (
-            displayFunc(it)
-          )}
-        </div>
-      ))}
-      <div 
-      aria-label={`${props["aria-label"]??""}_item-add`}
-      onClick={() => focusElement(bytes.length)}
-        className={clsx(`p-1 text-center border border-gray-400`,
-          selectedIdx === bytes.length && "bg-yellow-300")}
-        style={{ width: `${charPerItem}rem` }}
-      >
-        {selectedIdx === bytes.length && isWriting() ? (
-          displayInput
-        ) : (
-          "+"
-        )}</div>
+            "+"
+          )}</div>
+      </div>
     </div>
   )
 };
