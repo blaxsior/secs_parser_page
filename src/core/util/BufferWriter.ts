@@ -60,7 +60,7 @@ class BufferWriter {
     }
     
     public get buffer() {
-        return this._buffer;
+        return this._buffer.slice(0, this._offset);
     }
 
     public get maxOffset() {

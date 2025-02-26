@@ -34,7 +34,8 @@ class Secs2ItemInfoMap {
         });
     }
 
-    fromSML(sml: Secs2ItemSML) {
+    // fromSML(sml: string): Secs2ItemInfo;
+    fromSML(sml: Secs2ItemSML): Secs2ItemInfo {
         const result = this.smlToInfo.get(sml);
         if (result === undefined) throw new Error(`no secs-II type matched to sml ${sml}`);
         return result;
