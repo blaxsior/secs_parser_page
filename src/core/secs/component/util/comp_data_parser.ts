@@ -7,7 +7,6 @@ export class Secs2CompItemDataParser {
     constructor() {
         this.parseMap = new Map();
         this.parseMap.set('A', this.parseString);
-        this.parseMap.set('BOOLEAN', this.parseBoolean);
         
         this.parseMap.set('I8', this.parseBigint);
         this.parseMap.set('U8', this.parseBigint);
@@ -47,16 +46,7 @@ export class Secs2CompItemDataParser {
         }
         return items;
     }
-
-    private parseBoolean(item: string[]): boolean[] {
-        const items: boolean[] = [];
-        for (const data of item) {
-            if(!validateFloat(data)) throw new Error(`${data} cannot convert to boolean`);
-            items.push(parseInt(data) > 0);
-        }
-        return items;
-    }
-
+    
     private parseString(item: string[]): string {
         return item.join(''); // 띄어서 표현 가능하나 붙어 있는 것으로 간주.
     }

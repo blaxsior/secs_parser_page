@@ -44,9 +44,9 @@ export class ItemParseResolver {
     }
 
     private handleBoolean(reader: BufferReader, length: number) {
-        const data: boolean[] = [];
+        const data: number[] = [];
         for (let i = 0; i < length; i++) {
-            data.push(reader.readUInt8() > 0);
+            data.push(reader.readUInt8());
         }
         return data;
     }

@@ -44,7 +44,7 @@ export class ItemSerializeResolver {
 
     private handleBoolean(writer: BufferWriter, items: Secs2Item['data']) {
         for (const item of items!) {
-            writer.writeUInt8(item as boolean ? 1 : 0); // 'items'에 있는 데이터 사용
+            writer.writeUInt8(item as number); // 'items'에 있는 데이터 사용
         }
     }
 

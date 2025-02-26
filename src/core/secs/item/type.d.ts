@@ -10,7 +10,7 @@ export type Secs2ItemSML = 'L' | 'B' | 'BOOLEAN' | 'A' |
 type Secs2ItemDataType<T extends Secs2ItemSML = undefined> =
     T extends 'L' ? Secs2Item[] :
     T extends 'B' ? number[] :
-    T extends 'BOOLEAN' ? boolean[] :
+    T extends 'BOOLEAN' ? number[] :
     T extends 'A' ? string :
     T extends
     // 'J' | 

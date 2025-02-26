@@ -64,7 +64,7 @@ describe('ComponentItemConverter', () => {
             
             const expected: Secs2Item = {
                 info: secsInfoMap.fromSML('BOOLEAN'),
-                data: [true, true]
+                data: [13, 42]
             };
 
             const result: Secs2Item = converter.convert(item);
