@@ -52,7 +52,11 @@ function Secs2ItemComponent({ value, onChange, onRemove, root }: Secs2ItemCompon
                         <option key={it} value={it}>{it}</option>
                     ))}
                 </select>
-                <span>[{item.length}]</span>
+                <span>[{
+                    type === 'A' ?
+                        ((item as (string|null)[])
+                        .reduce((a,b) => a + (b?.length ?? 0), 0))
+                        : item.length}]</span>
                 {type !== 'L' &&
                     item.map((it, idx) => (
                         <input
