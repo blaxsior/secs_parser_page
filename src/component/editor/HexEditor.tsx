@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import clsx from 'clsx';
-import { useFocus } from "./hooks/useFocus";
 import { saturate } from "@/core/util/math";
 import { CopyIcon } from 'lucide-react';
 import { copyToClipboard } from "@/core/util/clipboard";
@@ -21,26 +20,29 @@ type HexEditorProps = {
 
 function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandler, displayFunc, parseFunc, charPerItem, validator, selectedIdx, className, itemPerLine = 8, ...props }: HexEditorProps) {
   const divRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const inputRef = useRef<string>("");
+  const inputStrRef = useRef<string>("");
   const [displayInput, setDisplayInput] = useState<string>("");
 
   const onCopy = async () => {
-    const data = divRef.current?.textContent?.replace('+', ''); 
-    if(!data) return;
+    const data = divRef.current?.textContent?.replace('+', '');
+    if (!data) return;
 
     await copyToClipboard(data);
   };
 
-  const { blur, click, focus, isFocused } = useFocus(divRef, {
-    onBlur: () => {
-      if (!isFocused) {
-        inputRef.current = "";
-        setDisplayInput(inputRef.current);
-      }
-    }
-  });
-  const isWriting = () => inputRef.current.length;
+  const onClick = () => {
+    inputRef.current?.focus();
+  }
+
+  const onBlur = () => {
+    inputRef.current?.blur();
+    inputStrRef.current = "";
+    setDisplayInput(inputStrRef.current);
+  }
+
+  const isWriting = () => inputStrRef.current.length;
 
   const focusElement = (idx: number, addidx = 0) => {
     // 0 = 첫번째 엘리먼트 / bytes.length + 1 = 엘리먼트 추가 시
@@ -53,11 +55,11 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
 
 
   const updateItem = (idx: number) => {
-    let number = parseFunc(inputRef.current);
+    let number = parseFunc(inputStrRef.current);
     if (!isNaN(number)) updateItemHandler(idx, number);
 
-    inputRef.current = "";
-    setDisplayInput(inputRef.current);
+    inputStrRef.current = "";
+    setDisplayInput(inputStrRef.current);
   }
 
   const deleteItem = (idx: number) => {
@@ -68,10 +70,10 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
   const handleInput = (key: string) => {
     if (key.length > 1 || !validator.test(key)) return;
 
-    inputRef.current += key;
-    setDisplayInput(inputRef.current);
+    inputStrRef.current += key;
+    setDisplayInput(inputStrRef.current);
 
-    if (inputRef.current.length < charPerItem) return;
+    if (inputStrRef.current.length < charPerItem) return;
 
     updateItem(selectedIdx);
     focusElement(selectedIdx + 1, 1);
@@ -96,8 +98,8 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
         break;
       case 'Backspace':
         if (isWriting()) {
-          inputRef.current = inputRef.current.slice(0, inputRef.current.length - 1);
-          setDisplayInput(inputRef.current);
+          inputStrRef.current = inputStrRef.current.slice(0, inputStrRef.current.length - 1);
+          setDisplayInput(inputStrRef.current);
         } else {
           deleteItem(selectedIdx);
           focusElement(selectedIdx - 1);
@@ -110,61 +112,69 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
   }
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-row justify-end">
-        <button
-          className="p-1 border rounded-md border-gray-300 active:border-gray-400"
-          onClick={onCopy}
-          aria-label='copy data'
-          title="copy data"
+    <>
+      <div className="space-y-2">
+        <div className="flex flex-row justify-end">
+          <button
+            className="p-1 border rounded-md border-gray-300 active:border-gray-400"
+            onClick={onCopy}
+            aria-label='copy data'
+            title="copy data"
           >
-          <CopyIcon color="gray" width={20} height={20} />
-        </button>
-      </div>
-      <hr />
-      <div
-        tabIndex={0}
-        ref={divRef}
-        onFocus={focus}
-        onBlur={blur}
-        onClick={click}
-        className={clsx('grid font-mono justify-items-center items-stretch gap-1', className)}
-        onKeyDown={keyHandler}
-        style={{
-          gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
-        }}
-        {...props}
-      >
-        {bytes.map((it, idx) => (
+            <CopyIcon color="gray" width={20} height={20} />
+          </button>
+        </div>
+        <hr />
+        <div
+          tabIndex={0}
+          ref={divRef}
+          onFocus={onClick}
+          onBlur={onBlur}
+          onClick={onClick}
+          className={clsx('grid font-mono justify-items-center items-stretch gap-1 focus:border', className)}
+          // onKeyDown={keyHandler}
+          style={{
+            gridTemplateColumns: `repeat(${itemPerLine}, 1fr)`
+          }}
+          {...props}
+        >
+          {bytes.map((it, idx) => (
+            <div
+              aria-label={`${props["aria-label"] ?? ""}_item-${idx}`}
+              key={idx}
+              onClick={() => focusElement(idx)}
+              className={clsx(`p-1 text-center`,
+                selectedIdx === idx && "bg-yellow-300")}
+              style={{ width: `${charPerItem}rem` }}
+            >
+              {selectedIdx === idx && isWriting() ? (
+                displayInput
+              ) : (
+                displayFunc(it)
+              )}
+            </div>
+          ))}
           <div
-            aria-label={`${props["aria-label"] ?? ""}_item-${idx}`}
-            key={idx}
-            onClick={() => focusElement(idx)}
-            className={clsx(`p-1 text-center`,
-              selectedIdx === idx && "bg-yellow-300")}
+            aria-label={`${props["aria-label"] ?? ""}_item-add`}
+            onClick={() => focusElement(bytes.length)}
+            className={clsx(`p-1 text-center border border-gray-400`,
+              selectedIdx === bytes.length && "bg-yellow-300")}
             style={{ width: `${charPerItem}rem` }}
           >
-            {selectedIdx === idx && isWriting() ? (
+            {selectedIdx === bytes.length && isWriting() ? (
               displayInput
             ) : (
-              displayFunc(it)
-            )}
-          </div>
-        ))}
-        <div
-          aria-label={`${props["aria-label"] ?? ""}_item-add`}
-          onClick={() => focusElement(bytes.length)}
-          className={clsx(`p-1 text-center border border-gray-400`,
-            selectedIdx === bytes.length && "bg-yellow-300")}
-          style={{ width: `${charPerItem}rem` }}
-        >
-          {selectedIdx === bytes.length && isWriting() ? (
-            displayInput
-          ) : (
-            "+"
-          )}</div>
+              "+"
+            )}</div>
+        </div>
       </div>
-    </div>
+      <input className="w-full outline-0 opacity-0"
+      ref={inputRef}
+      value={""}
+      onKeyDown={keyHandler}
+      onChange={(e) => { e.preventDefault(); }}
+      />
+    </>
   )
 };
 

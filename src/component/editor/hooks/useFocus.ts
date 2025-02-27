@@ -16,6 +16,7 @@ function useFocus(target: React.RefObject<HTMLElement>, options?: UseFocusOption
 
     const focusSelfHandler = () => {
         setFocus(true);
+        target.current?.focus();
         options?.onFocus?.();
     }
 
