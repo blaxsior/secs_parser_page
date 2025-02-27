@@ -79,8 +79,7 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
     focusElement(selectedIdx + 1, 1);
   };
 
-  const keyHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    const key = e.key;
+  const keyHandler = (key: string) => {
 
     switch (key) {
       case 'ArrowLeft':
@@ -111,6 +110,9 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
     }
   }
 
+  const keyDownHandler = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    keyHandler(e.key);
+  }
   return (
     <>
       <div className="space-y-2">
@@ -168,13 +170,18 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
             )}</div>
         </div>
         <input className="w-0 h-0 outline-0 opacity-0"
-      ref={inputRef}
-      value={""}
-      onKeyDown={keyHandler}
-      onChange={(e) => { e.preventDefault(); }}
-      />
+          ref={inputRef}
+          value={""}
+          // onKeyDown={keyDownHandler}
+          // onKeyUp={keyDownHandler}
+          onChange={
+            (e) => {
+              e.preventDefault();
+              keyHandler(e.target.value);
+            }}
+        />
       </div>
-      
+
     </>
   )
 };
