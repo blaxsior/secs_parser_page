@@ -167,13 +167,14 @@ function HexEditor({ bytes, updateItemHandler, deleteItemHandler, focusItemHandl
               "+"
             )}</div>
         </div>
-      </div>
-      <input className="w-full outline-0 opacity-0"
+        <input className="w-0 h-0 outline-0 opacity-0"
       ref={inputRef}
       value={""}
       onKeyDown={keyHandler}
       onChange={(e) => { e.preventDefault(); }}
       />
+      </div>
+      
     </>
   )
 };
