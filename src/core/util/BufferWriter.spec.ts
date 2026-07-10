@@ -197,9 +197,13 @@ describe("BufferWriter", () => {
     });
 
     it("resizeBufferIfNeeded: 버퍼 크기가 부족한 경우 증가", () => {
-        const writer = new BufferWriter(5);
-        writer.resizeBufferIfNeeded(8);
-
-        expect(writer.maxOffset).toEqual(10);
+        const writer = new BufferWriter(8);
+        writer.writeInt32(10);
+        writer.writeInt16(10);
+        // 6byte 사용
+        writer.resizeBufferIfNeeded(30);
+        // 30byte 데이터 들어와야 함 -> 총 36byte
+        // 8 16 32 64 로 64까지 증가
+        expect(writer.maxOffset).toEqual(64);
     });
 });
