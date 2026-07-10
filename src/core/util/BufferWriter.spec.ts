@@ -171,10 +171,10 @@ describe("BufferWriter", () => {
         expect(reader.maxOffset).toEqual(length);
     });
 
-    describe("addCapacity", ()=> {
-        it("내부 버퍼 모드에서 버퍼 크기 증가", () => {
+    describe("resize", ()=> {
+        it("내부 버퍼 모드에서 버퍼 크기 재설정", () => {
             const writer = new BufferWriter(10);
-            writer.addCapacity(10);
+            writer.resize(20);
     
             expect(writer.maxOffset).toEqual(20);
         });
@@ -183,7 +183,7 @@ describe("BufferWriter", () => {
             const writer = new BufferWriter(new ArrayBuffer(10));
 
             expect(() => {
-                writer.addCapacity(10);
+                writer.resize(10);
             }).toThrow("external buffer");
         });
 
@@ -191,7 +191,7 @@ describe("BufferWriter", () => {
             const writer = new BufferWriter(10);
 
             expect(() => {
-                writer.addCapacity(-5);
+                writer.resize(-5);
             }).toThrow("size must be bigger");
         });
     });

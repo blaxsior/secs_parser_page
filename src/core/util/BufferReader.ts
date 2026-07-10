@@ -9,12 +9,6 @@ class BufferReader {
         this._offset = 0;
     }
 
-    init(buffer: ArrayBuffer) {
-        this.buffer = buffer;
-        this.view = new DataView(buffer);
-        this._offset = 0;
-    }
-
     public get offset() {
         return this._offset;
     }
